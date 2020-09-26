@@ -73,9 +73,23 @@
     )
 ))
 
+(define is-begin? (lambda (expr)
+    (and (list? expr) (string? (car expr)) (string=? (car expr) "begin"))
+))
+
+(define resolve-begin (lambda (expr local-env)
+    (car (list-tail (map
+        (lambda (sub-expression)
+            (evalExp sub-expression local-env)
+        )
+        (cdr expr)
+    ) 1))
+))
+
 (define evalExp (lambda (program env)
     (if (null? program) '() 
         (cond
+            ((is-begin? program) (resolve-begin program env))
             ((is-symbol? program env) (resolve-symbol program env))
             ((is-numeric? program) (string->number program))
             ((is-define? program) (resolve-define program env))
@@ -116,14 +130,21 @@
 ;         )
 ;     )
 ; )" "\n" "")) global-env)
-(display (evalExp (parse "(define factorial
-    (lambda (x)
-        (if
-            (> x 1) ; test comment
-            (* x (factorial (- x 1)))
-            1 ; another test comment
+; (trace resolve-begin)
+(display (evalExp (parse "
+(begin
+    (define factorial
+        (lambda (x)
+            (if
+                (> x 1) ; test comment
+                (* x (factorial (- x 1)))
+                1 ; another test comment
+            )
         )
     )
-)") global-env))
-(display (evalExp (parse "(factorial 10") global-env))
+
+    (factorial 10)
+)
+") global-env))
+; (display (evalExp (parse "(factorial 10") global-env))
 
