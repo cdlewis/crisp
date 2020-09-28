@@ -105,32 +105,6 @@
     )
 ))
 
-; (display (parse "(+ 1 2)"))
-; (display (tokenise "(+ (* 1 2) 3)"))
-; (display (parse "(+ (* (- 1 0) 2) 3)"))
-; (display (string-split ",a,b,c" ","))
-; (display (string-indexof "ab,c" "," 0))
-; (display (parse "(+ 1 2)"))
-; (trace eval apply)
-; (display (eval (parse "(+ (* 2 3) (/ 2 2))") global-env))
-; (display (string-is-numeric? "1897987"))
-; (display (string->number "1"))
-; (display (get-env "+" global-env))
-; (display (parse "(define a (+ 1 1))"))
-; (trace evalExp resolve-symbol)
-; (evalExp (parse "(define double (lambda (x) (+ x x)))") global-env)
-; (evalExp (parse "(double 2") global-env)
-; (display global-env)
-; (evalExp (parse (string-replace "(define factorial
-;     (lambda (x)
-;         (if
-;             (> x 1) ; if condition
-;             (* x (factorial (- x 1)))
-;             1 ; default case
-;         )
-;     )
-; )" "\n" "")) global-env)
-; (trace resolve-begin)
 (display (evalExp (parse "
 (begin
     (define factorial
@@ -146,5 +120,4 @@
     (factorial 10)
 )
 ") global-env))
-; (display (evalExp (parse "(factorial 10") global-env))
 
