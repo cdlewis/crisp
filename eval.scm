@@ -92,12 +92,21 @@
     )
 ))
 
+(define is-string? (lambda (expr)
+    (and (string? expr) (string=? (substring expr 0 1) "\""))
+))
+
+(define resolve-string (lambda (expr)
+    (substring expr 1 (- (string-length expr) 1))
+))
+
 (define evalExp (lambda (program env)
     (if (null? program) '() 
         (cond
             ((is-keyword? "begin" program) (resolve-begin program env))
             ((is-symbol? program env) (resolve-symbol program env))
             ((is-numeric? program) (string->number program))
+            ((is-string? program) (resolve-string program))
             ((is-keyword? "define" program) (resolve-define program env))
             ((is-keyword? "lambda" program) (resolve-function program env))
             ((is-keyword? "if" program) (resolve-branch program env))

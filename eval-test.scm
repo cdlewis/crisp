@@ -1,4 +1,4 @@
-(load "main.scm")
+(load "eval.scm")
 (load "test-utils.scm")
 
 (test-deep-equal
@@ -29,4 +29,10 @@
     )
     ") global-env)
     15
+)
+
+(test-deep-equal
+    "Strings evaluate to themselves"
+    (evalExp (parse "\"hello\"") global-env)
+    "hello"
 )
