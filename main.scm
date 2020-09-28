@@ -74,6 +74,24 @@
     ) 1))
 ))
 
+(define resolve-local-variable (lambda (expr local-env)
+    (let ([variable-pairs (list-ref expr 1)] [sub-expression (list-ref expr 2)])
+        (evalExp
+            sub-expression
+            (append
+                (map
+                    (lambda (pair) (list
+                        (car pair)
+                        (evalExp (list-ref pair 1) local-env)
+                    ))
+                    variable-pairs
+                )
+                local-env
+            )
+        )
+    )
+))
+
 (define evalExp (lambda (program env)
     (if (null? program) '() 
         (cond
@@ -83,6 +101,7 @@
             ((is-keyword? "define" program) (resolve-define program env))
             ((is-keyword? "lambda" program) (resolve-function program env))
             ((is-keyword? "if" program) (resolve-branch program env))
+            ((is-keyword? "let" program) (resolve-local-variable program env))
             (else ; function call
                 (apply
                     (evalExp (car program) env)

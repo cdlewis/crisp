@@ -20,3 +20,13 @@
     ") global-env)
     3628800
 )
+
+(test-deep-equal
+    "Local variables are can be referenced within sub-expressions"
+    (evalExp (parse "
+    (let ([x (+ 2 3)] [y 10])
+        (+ x y)
+    )
+    ") global-env)
+    15
+)
