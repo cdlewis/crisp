@@ -41,6 +41,13 @@
     )
 ))
 
+(define atomise (lambda (token)
+    (cond
+        ((is-numeric? token) (string->number token))
+        (else token)
+    )
+))
+
 (define build-ast (lambda (tree remaining_tokens) ; returns (tree remaining_tokens)
     (if (null? remaining_tokens) (list tree remaining_tokens)
         (case (car remaining_tokens)
@@ -61,7 +68,7 @@
                 (build-ast
                     (append
                         tree
-                        (list (car remaining_tokens))
+                        (list (atomise (car remaining_tokens)))
                     )
                     (cdr remaining_tokens)
                 )

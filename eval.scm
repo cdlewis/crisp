@@ -112,7 +112,7 @@
         (cond
             ((is-keyword? "begin" program) (resolve-begin program env))
             ((is-symbol? program env) (resolve-symbol program env))
-            ((is-numeric? program) (string->number program))
+            ((number? program) program)
             ((is-string? program) (resolve-string program))
             ((is-keyword? "define" program) (resolve-define program env))
             ((is-keyword? "lambda" program) (resolve-function program env))

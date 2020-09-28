@@ -2,15 +2,21 @@
 (load "test-utils.scm")
 
 (test-deep-equal
+    "Atomise correctly parses numbers"
+    (atomise "10")
+    10
+)
+
+(test-deep-equal
     "Parse nested expression"
     (parse "(+ (* (- 1 0) 2) 3)")
-    (list "+" (list "*" (list "-" "1" "0") "2") "3")
+    (list "+" (list "*" (list "-" 1 0) 2) 3)
 )
 
 (test-deep-equal
     "Parse square brackets"
     (parse "(+ [* (- 1 0) 2] 3)")
-    (list "+" (list "*" (list "-" "1" "0") "2") "3")
+    (list "+" (list "*" (list "-" 1 0) 2) 3)
 )
 
 (test-deep-equal
@@ -35,17 +41,17 @@
             (list "lambda"
                 (list "x")
                 (list "if"
-                    (list ">" "x" "1")
+                    (list ">" "x" 1)
                     (list "*" "x"
                         (list "factorial"
-                            (list "-" "x" "1")
+                            (list "-" "x" 1)
                         )
                     )
-                    "1"
+                    1
                 )
             )
         )
-        (list "factorial" "10")
+        (list "factorial" 10)
     )
 )
 
