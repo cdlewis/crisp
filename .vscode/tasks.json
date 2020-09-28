@@ -7,7 +7,7 @@
             "label": "echo",
             "type": "shell",
             "command": "chez",
-            "args": ["--debug-on-exception", "--script", "main.scm"],
+            "args": ["--debug-on-exception", "--script", "${file}"],
             "problemMatcher": [],
             "group": {
                 "kind": "build",

@@ -1,5 +1,7 @@
 ; parsing logic
 
+(load "strings.scm")
+
 (define remove-comments-and-newlines (lambda (str)
     (fold-left
         string-append
@@ -20,10 +22,12 @@
 ))
 
 (define normalise-parens-spacing (lambda (str)
-    (string-replace
-        (string-replace str "(" " ( ")
-        ")"
-        " ) "
+    (fold-left
+        (lambda (current needle)
+            (string-replace current needle (string-append " " needle " "))
+        )
+        str
+        (list "(" ")" "[" "]")
     )
 ))
 
@@ -41,7 +45,7 @@
     (if (null? remaining_tokens) (list tree remaining_tokens)
         (case (car remaining_tokens)
             (
-                ("(")
+                ("(" "[")
                 (let ([subtree (build-ast '() (cdr remaining_tokens))])
                     (build-ast
                         (append tree (list (car subtree)))
@@ -50,7 +54,7 @@
                 )
             )
             (
-                (")")
+                (")" "]")
                 (list tree (cdr remaining_tokens))
             )
             (else
