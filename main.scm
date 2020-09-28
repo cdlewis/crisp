@@ -30,12 +30,12 @@
     )
 ))
 
-(define is-symbol? (lambda (key env)
-    (and (string? key) (resolve-symbol key env))
+(define is-keyword? (lambda (keyword expr)
+    (and (list? expr) (string? (car expr)) (string=? (car expr) keyword))
 ))
 
-(define is-define? (lambda (expr)
-    (and (list? expr) (string? (car expr)) (string=? (car expr) "define"))
+(define is-symbol? (lambda (key env)
+    (and (string? key) (resolve-symbol key env))
 ))
 
 (define resolve-define (lambda (expr env)
@@ -43,10 +43,6 @@
         (list-ref expr 1)
         (evalExp (list-ref expr 2) env)
     )))
-))
-
-(define is-function? (lambda (expr) 
-    (and (list? expr) (string? (car expr)) (string=? (car expr) "lambda"))
 ))
 
 (define resolve-function (lambda (expr env)
@@ -61,20 +57,12 @@
     )
 ))
 
-(define is-branch? (lambda (expr) 
-    (and (list? expr) (string? (car expr)) (string=? (car expr) "if"))
-))
-
 (define resolve-branch (lambda (expr env)
     (if
         (evalExp (list-ref expr 1) env)
         (evalExp (list-ref expr 2) env)
         (evalExp (list-ref expr 3) env)
     )
-))
-
-(define is-begin? (lambda (expr)
-    (and (list? expr) (string? (car expr)) (string=? (car expr) "begin"))
 ))
 
 (define resolve-begin (lambda (expr local-env)
@@ -89,12 +77,12 @@
 (define evalExp (lambda (program env)
     (if (null? program) '() 
         (cond
-            ((is-begin? program) (resolve-begin program env))
+            ((is-keyword? "begin" program) (resolve-begin program env))
             ((is-symbol? program env) (resolve-symbol program env))
             ((is-numeric? program) (string->number program))
-            ((is-define? program) (resolve-define program env))
-            ((is-function? program) (resolve-function program env))
-            ((is-branch? program) (resolve-branch program env))
+            ((is-keyword? "define" program) (resolve-define program env))
+            ((is-keyword? "lambda" program) (resolve-function program env))
+            ((is-keyword? "if" program) (resolve-branch program env))
             (else ; function call
                 (apply
                     (evalExp (car program) env)
@@ -104,20 +92,3 @@
         )
     )
 ))
-
-(display (evalExp (parse "
-(begin
-    (define factorial
-        (lambda (x)
-            (if
-                (> x 1) ; test comment
-                (* x (factorial (- x 1)))
-                1 ; another test comment
-            )
-        )
-    )
-
-    (factorial 10)
-)
-") global-env))
-
