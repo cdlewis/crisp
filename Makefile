@@ -1,4 +1,4 @@
-TESTS = main-test.scm parser-test.scm
+TESTS = eval-test.scm parser-test.scm
 
 .PHONY: test
 
