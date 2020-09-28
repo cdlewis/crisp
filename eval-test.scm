@@ -36,3 +36,9 @@
     (evalExp (parse "\"hello\"") global-env)
     "hello"
 )
+
+(test-deep-equal
+    "Other files can be evaluated with `load`"
+    (evalExp (parse "(load \"test-programs/simple-addition.scm\"") global-env)
+    2
+)

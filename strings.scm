@@ -60,3 +60,25 @@
         )
     )
 ))
+
+; from https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_15.html#SEC129
+(define (port->string input-port)
+    (let ((char (peek-char input-port)))
+        (if
+            (eof-object? char)
+            char
+            (list->string
+                (let loop ((char char))
+                    (if
+                        (eof-object? char)
+                        '()
+                        (begin
+                            (read-char input-port)
+                            (cons char (loop (peek-char input-port)))
+                        )
+                    )
+                )
+            )
+        )
+    )
+)

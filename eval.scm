@@ -100,6 +100,13 @@
     (substring expr 1 (- (string-length expr) 1))
 ))
 
+(define resolve-load (lambda (expr local-env)
+    (let
+        ([file-contents (port->string (open-input-file (evalExp (list-ref expr 1) local-env)))])
+        (evalExp (parse file-contents) local-env)
+    )
+))
+
 (define evalExp (lambda (program env)
     (if (null? program) '() 
         (cond
@@ -111,6 +118,7 @@
             ((is-keyword? "lambda" program) (resolve-function program env))
             ((is-keyword? "if" program) (resolve-branch program env))
             ((is-keyword? "let" program) (resolve-local-variable program env))
+            ((is-keyword? "load" program) (resolve-load program env))
             (else ; function call
                 (apply
                     (evalExp (car program) env)
