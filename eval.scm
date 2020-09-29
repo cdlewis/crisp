@@ -95,27 +95,28 @@
     )
 ))
 
-(define evalExp (lambda (program env)
-    (if (null? program) '() 
+(define evalExp (lambda (expr env)
+    (if (null? expr) '() 
         (cond
-            ; Primitive type
-            ((number? program) program)
-            ((string? program) program)
+            ; Primitive types
+            ((number? expr) expr)
+            ((string? expr) expr)
+            ((boolean? expr) expr)
 
             ; Symbol
-            ((is-keyword? "begin" program) (resolve-begin program env))
-            ((is-keyword? "define" program) (resolve-define program env))
-            ((is-keyword? "lambda" program) (resolve-function program env))
-            ((is-keyword? "if" program) (resolve-branch program env))
-            ((is-keyword? "let" program) (resolve-local-variable program env))
-            ((is-keyword? "load" program) (resolve-load program env))
-            ((symbol? program) (resolve-symbol program env))
+            ((is-keyword? "begin" expr) (resolve-begin expr env))
+            ((is-keyword? "define" expr) (resolve-define expr env))
+            ((is-keyword? "lambda" expr) (resolve-function expr env))
+            ((is-keyword? "if" expr) (resolve-branch expr env))
+            ((is-keyword? "let" expr) (resolve-local-variable expr env))
+            ((is-keyword? "load" expr) (resolve-load expr env))
+            ((symbol? expr) (resolve-symbol expr env))
 
             ; Function call
             (else
                 (apply
-                    (evalExp (car program) env)
-                    (map (lambda (x) (evalExp x env)) (cdr program))
+                    (evalExp (car expr) env)
+                    (map (lambda (x) (evalExp x env)) (cdr expr))
                 )
             )
         )
