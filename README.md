@@ -19,3 +19,9 @@ Currently supports assignment, recursion, comments, etc:
     (factorial 10)
 )
 ```
+
+## How to run
+To start the REPL, run:
+```
+make repl
+```
