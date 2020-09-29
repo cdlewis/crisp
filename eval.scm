@@ -3,19 +3,19 @@
 
 (define global-env (list
     ; arithmatic
-    (list "+" +)
-    (list "*" *)
-    (list "-" -)
-    (list "/" /)
+    (list (string->symbol "+") +)
+    (list (string->symbol "*") *)
+    (list (string->symbol "-") -)
+    (list (string->symbol "/") /)
 
     ; comparison
-    (list "=" =)
-    (list ">" >)
-    (list "<" <)
+    (list (string->symbol "=") =)
+    (list (string->symbol ">") >)
+    (list (string->symbol "<") <)
 
     ; constants
-    (list "#f" #f)
-    (list "#t" #t)
+    (list (string->symbol "#f") #f)
+    (list (string->symbol "#t") #t)
 ))
 
 (define resolve-symbol (lambda (key env)
@@ -23,19 +23,15 @@
         ([
             result
             (find (lambda (x)
-                (string=? (car x) key)
+                (eq? (car x) key)
             ) env)
         ])
-        (if (list? result) (list-ref result 1) #f)
+        (if (list? result) (list-ref result 1) "hello")
     )
 ))
 
 (define is-keyword? (lambda (keyword expr)
-    (and (list? expr) (string? (car expr)) (string=? (car expr) keyword))
-))
-
-(define is-symbol? (lambda (key env)
-    (and (string? key) (resolve-symbol key env))
+    (and (list? expr) (symbol? (car expr)) (eq? (car expr) (string->symbol keyword)))
 ))
 
 (define resolve-define (lambda (expr env)
@@ -92,14 +88,6 @@
     )
 ))
 
-(define is-string? (lambda (expr)
-    (and (string? expr) (string=? (substring expr 0 1) "\""))
-))
-
-(define resolve-string (lambda (expr)
-    (substring expr 1 (- (string-length expr) 1))
-))
-
 (define resolve-load (lambda (expr local-env)
     (let
         ([file-contents (port->string (open-input-file (evalExp (list-ref expr 1) local-env)))])
@@ -110,16 +98,21 @@
 (define evalExp (lambda (program env)
     (if (null? program) '() 
         (cond
-            ((is-keyword? "begin" program) (resolve-begin program env))
-            ((is-symbol? program env) (resolve-symbol program env))
+            ; Primitive type
             ((number? program) program)
-            ((is-string? program) (resolve-string program))
+            ((string? program) program)
+
+            ; Symbol
+            ((is-keyword? "begin" program) (resolve-begin program env))
             ((is-keyword? "define" program) (resolve-define program env))
             ((is-keyword? "lambda" program) (resolve-function program env))
             ((is-keyword? "if" program) (resolve-branch program env))
             ((is-keyword? "let" program) (resolve-local-variable program env))
             ((is-keyword? "load" program) (resolve-load program env))
-            (else ; function call
+            ((symbol? program) (resolve-symbol program env))
+
+            ; Function call
+            (else
                 (apply
                     (evalExp (car program) env)
                     (map (lambda (x) (evalExp x env)) (cdr program))

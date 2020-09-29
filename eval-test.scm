@@ -2,6 +2,12 @@
 (load "test-utils.scm")
 
 (test-deep-equal
+    "resolve-symbol resolves symbols as expected"
+    (resolve-symbol (string->symbol "+") global-env)
+    +
+)
+
+(test-deep-equal
     "Factorial function executes correctly"
     (evalExp (parse "
     (begin

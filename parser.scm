@@ -41,10 +41,19 @@
     )
 ))
 
+(define is-string? (lambda (expr)
+    (and (string? expr) (string=? (substring expr 0 1) "\""))
+))
+
+(define resolve-string (lambda (expr)
+    (substring expr 1 (- (string-length expr) 1))
+))
+
 (define atomise (lambda (token)
     (cond
         ((is-numeric? token) (string->number token))
-        (else token)
+        ((is-string? token) (resolve-string token))
+        (else (string->symbol token))
     )
 ))
 

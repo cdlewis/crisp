@@ -8,15 +8,21 @@
 )
 
 (test-deep-equal
+    "Atomise correctly parses strings"
+    (atomise "\"hello\"")
+    "hello"
+)
+
+(test-deep-equal
     "Parse nested expression"
     (parse "(+ (* (- 1 0) 2) 3)")
-    (list "+" (list "*" (list "-" 1 0) 2) 3)
+    (list (string->symbol "+") (list (string->symbol "*") (list (string->symbol "-") 1 0) 2) 3)
 )
 
 (test-deep-equal
     "Parse square brackets"
     (parse "(+ [* (- 1 0) 2] 3)")
-    (list "+" (list "*" (list "-" 1 0) 2) 3)
+    (list (string->symbol "+") (list (string->symbol "*") (list (string->symbol "-") 1 0) 2) 3)
 )
 
 (test-deep-equal
@@ -36,22 +42,22 @@
         (factorial 10)
     )
     ")
-    (list "begin"
-        (list "define" "factorial"
-            (list "lambda"
-                (list "x")
-                (list "if"
-                    (list ">" "x" 1)
-                    (list "*" "x"
-                        (list "factorial"
-                            (list "-" "x" 1)
+    (list (string->symbol "begin")
+        (list (string->symbol "define") (string->symbol "factorial")
+            (list (string->symbol "lambda")
+                (list (string->symbol "x"))
+                (list (string->symbol "if")
+                    (list (string->symbol ">") (string->symbol "x") 1)
+                    (list (string->symbol "*") (string->symbol "x")
+                        (list (string->symbol "factorial")
+                            (list (string->symbol "-") (string->symbol "x") 1)
                         )
                     )
                     1
                 )
             )
         )
-        (list "factorial" 10)
+        (list (string->symbol "factorial") 10)
     )
 )
 
