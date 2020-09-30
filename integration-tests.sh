@@ -17,7 +17,7 @@ else
     exit 1
 fi
 
-(echo "(load \"./test-programs/string-operations.scm\")\n(exit)") | chez --script repl.scm > /dev/null
+(echo "(load \"./test-programs/load-everything.scm\")\n(exit)") | chez --script repl.scm > /dev/null
 if [ $? -eq 0 ]
 then
   echo "PASS: self-parsing tests succeed"

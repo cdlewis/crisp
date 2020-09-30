@@ -1,3 +1,5 @@
+(begin
+
 (load "strings.scm")
 (load "parser.scm")
 
@@ -19,6 +21,10 @@
 
     ; string utility functions
     (list (string->symbol "peek-char") peek-char)
+    (list (string->symbol "string->symbol") string->symbol)
+
+    ; list utility functions
+    (list (string->symbol "list") list)
 ))
 
 (define resolve-symbol (lambda (key env)
@@ -139,3 +145,5 @@
         )
     )
 ))
+
+)

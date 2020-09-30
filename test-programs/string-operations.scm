@@ -1,3 +1,0 @@
-(begin
-    (load "strings.scm")
-)

@@ -42,11 +42,24 @@
 ))
 
 (define is-string? (lambda (expr)
-    (and (string? expr) (string=? (substring expr 0 1) "\""))
+    (and
+        (string? expr)
+        ; Previously any string that starts with `"` will be treated as
+        ; an un-parsed string. Try to minimise the damage here by requiring
+        ; > 1 length and quotes at start/end.
+        (> (string-length expr) 1)
+        (char=? (string-ref expr 0) #\")
+        (char=? (string-ref expr (- (string-length expr) 1)) #\")
+    )
 ))
 
 (define resolve-string (lambda (expr)
-    (substring expr 1 (- (string-length expr) 1))
+    (substring
+        expr
+        1
+        ; Ensure that a valid substring is always taken (> 0 chars)
+        (max 2 (- (string-length expr) 1))
+    )
 ))
 
 (define atomise (lambda (token)
