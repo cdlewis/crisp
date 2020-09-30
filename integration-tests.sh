@@ -4,7 +4,7 @@ output=$((echo "(+ 1 1)\n(exit)") | chez --script repl.scm)
 if [ "$output" = "$expected" ]; then
     echo "PASS: repl behaves as expected"
 else
-    echo "Error! Expected ($expected) got ($output)"
+    echo "FAIL: expected ($expected) got ($output)"
     exit 1
 fi
 
@@ -13,6 +13,15 @@ output=$((echo "(missing-function 1 2)\n(exit)") | chez --script repl.scm 2>&1 >
 if [ "$output" = "$expected" ]; then
     echo "PASS: exception handling behaves as expected"
 else
-    echo "Error! Expected ($expected) got ($output)"
+    echo "FAIL: expected ($expected) got ($output)"
     exit 1
+fi
+
+(echo "(load \"./test-programs/string-operations.scm\")\n(exit)") | chez --script repl.scm > /dev/null
+if [ $? -eq 0 ]
+then
+  echo "PASS: self-parsing tests succeed"
+else
+  echo "FAIL: self-parsing tests failed"
+  exit 1
 fi

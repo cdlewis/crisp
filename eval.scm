@@ -16,6 +16,9 @@
     ; constants
     (list (string->symbol "#f") #f)
     (list (string->symbol "#t") #t)
+
+    ; string utility functions
+    (list (string->symbol "peek-char") peek-char)
 ))
 
 (define resolve-symbol (lambda (key env)
@@ -66,12 +69,19 @@
 ))
 
 (define resolve-begin (lambda (expr local-env)
-    (car (list-tail (map
-        (lambda (sub-expression)
-            (evalExp sub-expression local-env)
+    (let
+        ([evaluated-statements (map
+            (lambda (sub-expression)
+                (evalExp sub-expression local-env)
+            )
+            (cdr expr)
+        )])
+        (case (length evaluated-statements)
+            (0 '())
+            (1 (car evaluated-statements))
+            (else (list-ref (list-tail evaluated-statements 1) 0))
         )
-        (cdr expr)
-    ) 1))
+    )
 ))
 
 (define resolve-local-variable (lambda (expr local-env)
@@ -81,7 +91,7 @@
             (append
                 (map
                     (lambda (pair) (list
-                        (car pair)
+                        (list-ref pair 0)
                         (evalExp (list-ref pair 1) local-env)
                     ))
                     variable-pairs
@@ -120,7 +130,7 @@
             (else
                 (let
                     (
-                        [function (evalExp (car expr) env)]
+                        [function (evalExp (list-ref expr 0) env)]
                         [args (map (lambda (x) (evalExp x env)) (cdr expr))]
                     )
                     (apply function args)

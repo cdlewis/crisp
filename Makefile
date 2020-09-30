@@ -4,7 +4,7 @@ TESTS = eval-test.scm parser-test.scm
 
 test:
 	@for file in $(TESTS); do chez --script $$file; done
-	@./repl-test.sh
+	@./integration-tests.sh
 
 repl:
 	@chez --script repl.scm 

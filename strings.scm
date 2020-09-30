@@ -1,5 +1,7 @@
 ; string helpers
 
+(begin
+
 (define string-replace (lambda (str search replace)
     (if (< (string-length str) (string-length search)) str
         (if (string=? (substring str 0 (string-length search)) search)
@@ -62,7 +64,7 @@
 ))
 
 ; from https://groups.csail.mit.edu/mac/ftpdir/scheme-7.4/doc-html/scheme_15.html#SEC129
-(define (port->string input-port)
+(define port->string (lambda (input-port)
     (let ((char (peek-char input-port)))
         (if
             (eof-object? char)
@@ -81,4 +83,6 @@
             )
         )
     )
+))
+
 )
