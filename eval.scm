@@ -26,7 +26,11 @@
                 (eq? (car x) key)
             ) env)
         ])
-        (if (list? result) (list-ref result 1) "hello")
+        (if
+            (list? result)
+            (list-ref result 1)
+            (error "resolve-symbol. Missing reference" (symbol->string key))
+        )
     )
 ))
 
@@ -114,9 +118,12 @@
 
             ; Function call
             (else
-                (apply
-                    (evalExp (car expr) env)
-                    (map (lambda (x) (evalExp x env)) (cdr expr))
+                (let
+                    (
+                        [function (evalExp (car expr) env)]
+                        [args (map (lambda (x) (evalExp x env)) (cdr expr))]
+                    )
+                    (apply function args)
                 )
             )
         )
