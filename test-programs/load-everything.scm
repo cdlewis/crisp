@@ -1,3 +1,3 @@
 (begin
-    (load "repl.scm")
+    (load "parser.scm")
 )

@@ -1,3 +1,5 @@
+(begin
+
 (load "eval.scm")
 
 (define read-input (lambda ()
@@ -18,3 +20,5 @@
 ))
 
 (read-input)
+
+)

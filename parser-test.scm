@@ -2,6 +2,12 @@
 (load "test-utils.scm")
 
 (test-deep-equal
+    "Find comment character ignores comments in strings"
+    (find-comment-character "\";\" hello ; end of line" 0 #f)
+    10
+)
+
+(test-deep-equal
     "Atomise correctly parses numbers"
     (atomise "10")
     10
@@ -61,3 +67,22 @@
     )
 )
 
+(test-deep-equal
+    "Parses `let` statements correctly"
+    (parse "(let ([commentIndex (string-indexof x \";\" 0)]) commentIndex)")
+    (list
+        (string->symbol "let")
+        (list
+            (list
+                (string->symbol "commentIndex")
+                (list
+                    (string->symbol "string-indexof")
+                    (string->symbol "x")
+                    ";"
+                    0
+                )
+            )
+        )
+        (string->symbol "commentIndex")
+    )
+)

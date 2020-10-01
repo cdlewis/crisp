@@ -27,18 +27,16 @@
     (list (string->symbol "list") list)
 ))
 
-(define resolve-symbol (lambda (key env)
+(define resolve-symbol (lambda (key local-env)
     (let
-        ([
-            result
-            (find (lambda (x)
-                (eq? (car x) key)
-            ) env)
-        ])
-        (if
-            (list? result)
-            (list-ref result 1)
-            (error "resolve-symbol. Missing reference" (symbol->string key))
+        (
+            [local-env-result (find (lambda (x) (eq? (car x) key)) local-env)]
+            [global-env-result (find (lambda (x) (eq? (car x) key)) global-env)]
+        )
+        (cond
+            ((list? local-env-result) (list-ref local-env-result 1))
+            ((list? global-env-result) (list-ref global-env-result 1))
+            (else (error "resolve-symbol. Missing reference" (symbol->string key)))
         )
     )
 ))

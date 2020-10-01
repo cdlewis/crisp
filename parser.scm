@@ -1,6 +1,28 @@
 ; parsing logic
 
+(begin
+
 (load "strings.scm")
+
+(define find-comment-character (lambda (str index in-quotes)
+    (if
+        (>= index (string-length str))
+        -1
+        (let
+            ([current-character (string-ref str index)])
+            (if
+                (and (not in-quotes) (char=? #\; current-character))
+                index
+                (find-comment-character
+                    str
+                    (+ index 1)
+                    ; Boils down to logical XOR of in-quotes and whether we just saw a quote
+                    (not (eq? in-quotes (char=? current-character #\")))
+                )
+            )
+        )
+    )
+))
 
 (define remove-comments-and-newlines (lambda (str)
     (fold-left
@@ -8,7 +30,7 @@
         ""
         (map
             (lambda (x)
-                (let ([commentIndex (string-indexof x ";" 0)])
+                (let ([commentIndex (find-comment-character x 0 #f)])
                     (if
                         (= commentIndex -1)
                         x
@@ -54,11 +76,15 @@
 ))
 
 (define resolve-string (lambda (expr)
-    (substring
-        expr
-        1
-        ; Ensure that a valid substring is always taken (> 0 chars)
-        (max 2 (- (string-length expr) 1))
+    ; Ensure that a valid substring is always taken (> 0 chars)
+    (if
+        (= (string-length expr) 2)
+        ""
+        (substring
+            expr
+            1
+            (- (string-length expr) 1)
+        )
     )
 ))
 
@@ -100,3 +126,5 @@
 ))
 
 (define parse (lambda (str) (car (car (build-ast '() (tokenise str))))))
+
+)
