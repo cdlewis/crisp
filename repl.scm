@@ -10,7 +10,7 @@
                 (string=? command "(exit)")
                 (display #\newline)
                 (begin
-                    (display (evalExp (parse command) global-env))
+                    (display (evalExp (parse command) (list)))
                     (display #\newline)
                     (read-input)
                 )

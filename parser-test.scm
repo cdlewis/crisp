@@ -86,3 +86,12 @@
         (string->symbol "commentIndex")
     )
 )
+
+(test-deep-equal
+    "Parses strings correctly"
+    (parse "(display \"> \")")
+    (list
+        (string->symbol "display")
+        "> "
+    )
+)

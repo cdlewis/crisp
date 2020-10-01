@@ -34,18 +34,35 @@
     )
 ))
 
-(define string-split (lambda (str delim) 
-    (if (eq? (string-length str) 0 ) '()
-    (let ([splitIndex (string-indexof str delim 0)])
-        (if (eq? splitIndex -1)
-            (list str)
-            (append
-                (list (substring str 0 splitIndex))
-                (string-split (substring str (+ splitIndex 1 ) (string-length str)) delim)
+(define string-split (lambda (str delim index in-quotes)
+    (if (>= index (string-length str))
+        (list str)
+        (let ([current-character (string-ref str index)])
+            (if (and (char=? current-character delim) (not in-quotes))
+                (append
+                    (list (substring str 0 index))
+                    (string-split
+                        (substring
+                            str
+                            (+ index 1 )
+                            (string-length str)
+                        )
+                        delim
+                        0
+                        #f
+                    )
+                )
+                (string-split
+                    str
+                    delim
+                    (+ index 1)
+                    ; Boils down to logical XOR of in-quotes and whether we just saw a quote
+                    (not (eq? in-quotes (char=? current-character #\")))
+                )
             )
         )
     )
-)))
+))
 
 (define is-numeric? (lambda (str)
     (and

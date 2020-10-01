@@ -22,6 +22,7 @@
     ; string utility functions
     (list (string->symbol "peek-char") peek-char)
     (list (string->symbol "string->symbol") string->symbol)
+    (list (string->symbol "string=?") string=?)
 
     ; list utility functions
     (list (string->symbol "list") list)

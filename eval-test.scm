@@ -44,6 +44,12 @@
 )
 
 (test-deep-equal
+    "Strings can be passed as arguments"
+    (evalExp (parse "(string=? \"cat\" \"hat\")") (list))
+    #f
+)
+
+(test-deep-equal
     "Other files can be evaluated with `load`"
     (evalExp (parse "(load \"test-programs/simple-addition.scm\"") global-env)
     2

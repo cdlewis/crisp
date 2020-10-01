@@ -38,7 +38,7 @@
                     )
                 )
             )
-            (string-split str "\n")
+            (string-split str #\newline 0 #f)
         )
     )
 ))
@@ -58,7 +58,9 @@
         (lambda (token) (not (string=? token "")))
         (string-split
             (normalise-parens-spacing (remove-comments-and-newlines str))
-            " "
+            #\space
+            0
+            #f
         )
     )
 ))
