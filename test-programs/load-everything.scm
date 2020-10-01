@@ -1,3 +1,3 @@
 (begin
-    (load "parser.scm")
+    (load "eval.scm")
 )
