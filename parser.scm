@@ -38,7 +38,7 @@
                     )
                 )
             )
-            (string-split str #\newline 0 #f)
+            (context-aware-string-split str #\newline)
         )
     )
 ))
@@ -56,11 +56,9 @@
 (define tokenise (lambda (str)
     (filter
         (lambda (token) (not (string=? token "")))
-        (string-split
+        (context-aware-string-split
             (normalise-parens-spacing (remove-comments-and-newlines str))
             #\space
-            0
-            #f
         )
     )
 ))
@@ -105,6 +103,7 @@
         (let ([sequence (substring expr 2 (string-length expr))])
             (case sequence
                 (("newline") #\newline)
+                (("space") #\space)
                 (else (error "resolve-character. Unrecognised sequence" expr))
             )
         )

@@ -34,14 +34,22 @@
     )
 ))
 
-(define string-split (lambda (str delim index in-quotes)
+(define context-aware-string-split (lambda (str delim)
+    (context-aware-string-split-impl str delim 0 #f #f)
+))
+
+(define context-aware-string-split-impl (lambda (str delim index in-quotes escaped)
     (if (>= index (string-length str))
         (list str)
         (let ([current-character (string-ref str index)])
-            (if (and (char=? current-character delim) (not in-quotes))
+            (if (and
+                    (char=? current-character delim)
+                    (not in-quotes)
+                    (not escaped)
+                )
                 (append
                     (list (substring str 0 index))
-                    (string-split
+                    (context-aware-string-split-impl
                         (substring
                             str
                             (+ index 1 )
@@ -50,14 +58,26 @@
                         delim
                         0
                         #f
+                        #f
                     )
                 )
-                (string-split
+                (context-aware-string-split-impl
                     str
                     delim
                     (+ index 1)
-                    ; Boils down to logical XOR of in-quotes and whether we just saw a quote
-                    (not (eq? in-quotes (char=? current-character #\")))
+                    (and
+                        ; Boils down to logical XOR of in-quotes and whether we just saw a quote
+                        (not (eq? in-quotes (char=? current-character #\")))
+                        ; Can't be in an escaped sequence
+                        (not escaped)
+                    )
+                    (and
+                        (char=? current-character #\\)
+                        ; Not an *escaped* escaped character
+                        (not escaped)
+                        ; Not inside a string
+                        (not in-quotes)
+                    )
                 )
             )
         )
