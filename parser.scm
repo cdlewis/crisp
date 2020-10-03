@@ -90,10 +90,32 @@
     )
 ))
 
+(define is-character? (lambda (expr)
+    (and
+        (string? expr)
+        (char=? (string-ref expr 0) #\#)
+        (char=? (string-ref expr 1) #\\)
+    )
+))
+
+(define resolve-character (lambda (expr)
+    (if
+        (= (string-length expr) 3)
+        (string-ref expr 2)
+        (let ([sequence (substring expr 2 (string-length expr))])
+            (case sequence
+                (("newline") #\newline)
+                (else (error "resolve-character. Unrecognised sequence" expr))
+            )
+        )
+    )
+))
+
 (define atomise (lambda (token)
     (cond
         ((is-numeric? token) (string->number token))
         ((is-string? token) (resolve-string token))
+        ((is-character? token) (resolve-character token))
         (else (string->symbol token))
     )
 ))

@@ -95,3 +95,12 @@
         "> "
     )
 )
+
+(test-deep-equal
+    "Parses characters correctly"
+    (parse "(display #\\newline)")
+    (list
+        (string->symbol "display")
+        #\newline
+    )
+)
