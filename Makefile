@@ -8,3 +8,6 @@ test:
 
 repl:
 	@chez --script repl.scm 
+
+inception:
+	@(echo "(load \"./repl.scm\")\n(exit)") | chez --script repl.scm
