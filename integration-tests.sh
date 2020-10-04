@@ -16,12 +16,3 @@ else
     echo "FAIL: expected ($expected) got ($output)"
     exit 1
 fi
-
-(echo "(load \"./test-programs/load-everything.scm\")\n(exit)") | $SCHEME_COMMAND --script repl.scm > /dev/null
-if [ $? -eq 0 ]
-then
-  echo "PASS: self-parsing tests succeed"
-else
-  echo "FAIL: self-parsing tests failed"
-  exit 1
-fi
