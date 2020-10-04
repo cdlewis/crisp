@@ -6,7 +6,7 @@ TESTS = eval-test.scm parser-test.scm
 
 test:
 	@for file in $(TESTS); do $(SCHEME_COMMAND) --script $$file; done
-	@./integration-tests.sh
+	@SCHEME_COMMAND=$(SCHEME_COMMAND) ./integration-tests.sh
 
 repl:
 	@$(SCHEME_COMMAND) --script repl.scm 
