@@ -3,7 +3,7 @@
 
 (test-deep-equal
     "string splitting respects quotation marks"
-    (context-aware-string-split "\"the cat jumped over the moon\" \"rats\"" #\space 0)
+    (context-aware-string-split "\"the cat jumped over the moon\" \"rats\"" #\space)
     (list "\"the cat jumped over the moon\"" "\"rats\"")
 )
 
