@@ -7,7 +7,7 @@
         (display "> ")
         (let ([command (get-line (current-input-port))])
             (if
-                (string=? command "(exit)")
+                (or (not (string? command)) (string=? command "(exit)"))
                 (display #\newline)
                 (begin
                     (display (evalExp (parse command) (list)))

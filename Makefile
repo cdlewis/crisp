@@ -1,6 +1,6 @@
 SCHEME_COMMAND:=$(shell command -v chez || command -v scheme)
 
-TESTS = eval-test.scm parser-test.scm
+TESTS = eval-test.scm strings-test.scm parser-test.scm
 
 .PHONY: test
 
