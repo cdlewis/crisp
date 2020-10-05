@@ -54,3 +54,21 @@
     (evalExp (parse "(load \"test-programs/simple-addition.scm\"") global-env)
     2
 )
+
+(test-deep-equal
+    "Logical AND returns true when all elements are true"
+    (evalExp (parse "(and #t #t #t") (list))
+    #t
+)
+
+(test-deep-equal
+    "Logical AND returns false when an element is false"
+    (evalExp (parse "(and #t #f #t") (list))
+    #f
+)
+
+(test-deep-equal
+    "Logical AND short circuits when falsy statement is seen"
+    (evalExp (parse "(and #f (missing-function-call 1 2 3)") (list))
+    #f
+)

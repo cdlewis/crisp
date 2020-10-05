@@ -2,31 +2,7 @@
 
 (load "strings.scm")
 (load "parser.scm")
-
-(define global-env (list
-    ; arithmatic
-    (list (string->symbol "+") +)
-    (list (string->symbol "*") *)
-    (list (string->symbol "-") -)
-    (list (string->symbol "/") /)
-
-    ; comparison
-    (list (string->symbol "=") =)
-    (list (string->symbol ">") >)
-    (list (string->symbol "<") <)
-
-    ; constants
-    (list (string->symbol "#f") #f)
-    (list (string->symbol "#t") #t)
-
-    ; string utility functions
-    (list (string->symbol "peek-char") peek-char)
-    (list (string->symbol "string->symbol") string->symbol)
-    (list (string->symbol "string=?") string=?)
-
-    ; list utility functions
-    (list (string->symbol "list") list)
-))
+(load "global-environment.scm")
 
 (define resolve-symbol (lambda (key local-env)
     (let
@@ -114,6 +90,22 @@
     )
 ))
 
+(define resolve-logical-and (lambda (expr local-env)
+    (fold-left
+        (lambda (current-result next-expr)
+            (if
+                ; Short-circuit if we've already evaluated to false
+                (eq? current-result #f)
+                #f
+                ; Otherwise evaluate the next component and check its value
+                (if (evalExp next-expr local-env) #t #f)
+            )
+        )
+        #t
+        (cdr expr)
+    )
+))
+
 (define evalExp (lambda (expr env)
     (if (null? expr) '() 
         (cond
@@ -121,6 +113,7 @@
             ((number? expr) expr)
             ((string? expr) expr)
             ((boolean? expr) expr)
+            ((char? expr) expr)
 
             ; Symbol
             ((is-keyword? "begin" expr) (resolve-begin expr env))
@@ -129,6 +122,7 @@
             ((is-keyword? "if" expr) (resolve-branch expr env))
             ((is-keyword? "let" expr) (resolve-local-variable expr env))
             ((is-keyword? "load" expr) (resolve-load expr env))
+            ((is-keyword? "and" expr) (resolve-logical-and expr env))
             ((symbol? expr) (resolve-symbol expr env))
 
             ; Function call

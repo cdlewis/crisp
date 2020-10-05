@@ -25,3 +25,12 @@ else
   echo "FAIL: self-parsing tests failed"
   exit 1
 fi
+
+echo "(load \"./test-programs/string-manipulation.scm\")\n(exit)" | $SCHEME_COMMAND --script repl.scm > /dev/null
+if [ $? -eq 0 ]
+then
+  echo "PASS: string-manipulation tests succeed"
+else
+  echo "FAIL: string-manipulation tests failed"
+  exit 1
+fi
