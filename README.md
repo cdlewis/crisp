@@ -1,4 +1,4 @@
-![CI](https://github.com/cdlewis/crisp/workflows/CI/badge.svg)
+[![CI](https://github.com/cdlewis/crisp/workflows/CI/badge.svg)](https://github.com/cdlewis/crisp/actions?query=workflow%3ACI)
 
 # CRISP - Chris Lisp
 
