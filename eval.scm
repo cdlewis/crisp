@@ -2,31 +2,7 @@
 
 (load "strings.scm")
 (load "parser.scm")
-
-(define global-env (list
-    ; arithmatic
-    (list (string->symbol "+") +)
-    (list (string->symbol "*") *)
-    (list (string->symbol "-") -)
-    (list (string->symbol "/") /)
-
-    ; comparison
-    (list (string->symbol "=") =)
-    (list (string->symbol ">") >)
-    (list (string->symbol "<") <)
-
-    ; constants
-    (list (string->symbol "#f") #f)
-    (list (string->symbol "#t") #t)
-
-    ; string utility functions
-    (list (string->symbol "peek-char") peek-char)
-    (list (string->symbol "string->symbol") string->symbol)
-    (list (string->symbol "string=?") string=?)
-
-    ; list utility functions
-    (list (string->symbol "list") list)
-))
+(load "global-environment.scm")
 
 (define resolve-symbol (lambda (key local-env)
     (let
@@ -137,6 +113,7 @@
             ((number? expr) expr)
             ((string? expr) expr)
             ((boolean? expr) expr)
+            ((char? expr) expr)
 
             ; Symbol
             ((is-keyword? "begin" expr) (resolve-begin expr env))
