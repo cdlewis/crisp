@@ -114,6 +114,22 @@
     )
 ))
 
+(define resolve-logical-and (lambda (expr local-env)
+    (fold-left
+        (lambda (current-result next-expr)
+            (if
+                ; Short-circuit if we've already evaluated to false
+                (eq? current-result #f)
+                #f
+                ; Otherwise evaluate the next component and check its value
+                (if (evalExp next-expr local-env) #t #f)
+            )
+        )
+        #t
+        (cdr expr)
+    )
+))
+
 (define evalExp (lambda (expr env)
     (if (null? expr) '() 
         (cond
@@ -129,6 +145,7 @@
             ((is-keyword? "if" expr) (resolve-branch expr env))
             ((is-keyword? "let" expr) (resolve-local-variable expr env))
             ((is-keyword? "load" expr) (resolve-load expr env))
+            ((is-keyword? "and" expr) (resolve-logical-and expr env))
             ((symbol? expr) (resolve-symbol expr env))
 
             ; Function call
