@@ -95,10 +95,10 @@
         (lambda (current-result next-expr)
             (if
                 ; Short-circuit if we've already evaluated to false
-                (eq? current-result #f)
+                (not current-result)
                 #f
-                ; Otherwise evaluate the next component and check its value
-                (if (evalExp next-expr local-env) #t #f)
+                ; Otherwise evaluate the next component
+                (evalExp next-expr local-env)
             )
         )
         #t
