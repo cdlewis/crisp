@@ -50,18 +50,11 @@
 ))
 
 (define resolve-begin (lambda (expr local-env)
-    (let
-        ([evaluated-statements (map
-            (lambda (sub-expression)
-                (evalExp sub-expression local-env)
-            )
-            (cdr expr)
-        )])
-        (case (length evaluated-statements)
-            (0 '())
-            (1 (car evaluated-statements))
-            (else (list-ref (list-tail evaluated-statements 1) 0))
+    (for-each
+        (lambda (sub-expression)
+            (evalExp sub-expression local-env)
         )
+        (cdr expr)
     )
 ))
 

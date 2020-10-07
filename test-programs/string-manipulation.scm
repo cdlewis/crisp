@@ -4,4 +4,6 @@
 
 (is-numeric? "198798")
 
+(string-replace "cat cat" "cat" "dog")
+
 )

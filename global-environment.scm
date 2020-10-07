@@ -26,11 +26,17 @@
     (list (string->symbol "string->list") string->list)
     (list (string->symbol "string=?") string=?)
     (list (string->symbol "string?") string?)
+    (list (string->symbol "string-length") string-length)
+    (list (string->symbol "substring") substring)
+    (list (string->symbol "string-append") string-append)
 
     ; list utility functions
     (list (string->symbol "list") list)
     (list (string->symbol "fold-left") fold-left)
     (list (string->symbol "map") map)
+
+    ; reflection functions
+    (list (string->symbol "trace") (lambda x '()))
 ))
 
 )
